@@ -10,7 +10,8 @@ var addItem = function(state, item) {
 var removeItem = function(state, item) {
 	for(var i = 0; i < state.items.length; i++){
 		if (state.items[i] === item) {
-		} state.items.splice(i-1, 1);
+			state.items.splice(i, 1);
+		} 
 	}
 }
 
