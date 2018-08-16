@@ -4,19 +4,38 @@ var state = {
 };
 //functions that modify state
 var addItem = function(state, item) {
-    state.items.push(item);
+    state.items.push({
+    	itemDisplay: item,
+    	checked: false
+    });
 };
 
 var removeItem = function(state, item) {
 	state.items.splice(item, 1);
 }
 
+var checkIt = function(state, itemIndex){
+	if (state.items[itemIndex].checked === true){
+		state.items[itemIndex].checked = false; 
+	} else {
+		state.items[itemIndex].checked = true
+	};	
+}
+
+var renderCheck = function(state){
+	state.items.map(function(item){
+		if(item.checked === true){
+			var indexItem = state.items.indexOf(item);
+			$('#'+indexItem).closest("li").children().first().addClass('shopping-item__checked');
+		}
+	});
+}
+
 //functions that render state
 var renderList = function(state, element) {
     var itemsHTML = state.items.map(function(item) {
     	var indexItem = state.items.indexOf(item);
-    	console.log(indexItem);
-        return '<li id='+ indexItem +'> <span class="shopping-item">' + item + '</span>\
+        return '<li id='+ indexItem +'> <span class="shopping-item">' + item.itemDisplay + '</span>\
 			        <div class="shopping-item-controls">\
 	          		<button class="shopping-item-toggle js-shopping-item-toggle">\
 	            	<span class="button-label">check</span>\
@@ -27,7 +46,8 @@ var renderList = function(state, element) {
 	        		</div>\
       			</li>';
     	});
-    element.html(itemsHTML);
+    element.html(itemsHTML);  
+    renderCheck(state); 
 };
 
 //event listeners
@@ -48,7 +68,8 @@ $('#js-shopping-list-form').submit(function(event) {
 //uncheck/check button
 function checkItem () {
 	$(document).on('click', "button.js-shopping-item-toggle", function() {
-		$(this).closest("li").children().first().toggleClass('shopping-item__checked');
+		checkIt(state, $(this).closest("li").attr("id"));
+		renderList(state, $('.shopping-list'));
 	});
 }
 
@@ -57,7 +78,7 @@ function checkItem () {
 function deleteItem () {
 	$(document).on('click', "button.js-shopping-item-delete", function() {
 		removeItem(state, $(this).closest("li").attr("id"));  
-	    renderList(state, $('.shopping-list'));      
+	    renderList(state, $('.shopping-list'));
 	});
 }
 
