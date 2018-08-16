@@ -8,17 +8,15 @@ var addItem = function(state, item) {
 };
 
 var removeItem = function(state, item) {
-	for(var i = 0; i < state.items.length; i++){
-		if (state.items[i] === item) {
-			state.items.splice(i, 1);
-		} 
-	}
+	state.items.splice(item, 1);
 }
 
 //functions that render state
 var renderList = function(state, element) {
     var itemsHTML = state.items.map(function(item) {
-        return '<li id='+item+'> <span class="shopping-item">' + item + '</span>\
+    	var indexItem = state.items.indexOf(item);
+    	console.log(indexItem);
+        return '<li id='+ indexItem +'> <span class="shopping-item">' + item + '</span>\
 			        <div class="shopping-item-controls">\
 	          		<button class="shopping-item-toggle js-shopping-item-toggle">\
 	            	<span class="button-label">check</span>\
@@ -58,24 +56,14 @@ function checkItem () {
 // delete button
 function deleteItem () {
 	$(document).on('click', "button.js-shopping-item-delete", function() {
-	    removeItem(state, $(this).closest("li").attr("id"));  
+		removeItem(state, $(this).closest("li").attr("id"));  
 	    renderList(state, $('.shopping-list'));      
 	});
 }
 
 //get rid of example text
-$(function(){
+
 	emtpyExisting();
-})
-
-$(function(){
 	addNewItem();
-})
-
-$(function(){
 	checkItem();
-})
-
-$(function(){
 	deleteItem();
-})
